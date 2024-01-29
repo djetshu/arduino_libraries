@@ -1,19 +1,18 @@
-#ifndef sneak_robot_motor_h
-#define sneak_robot_motor_h
+#ifndef snake_robot_motor_h
+#define snake_robot_motor_h
 #define LIBRARY_VERSION	1.0.0
 
 #include <PID_v1.h>
-class Motor_Sneak
+class Motor_Snake
 {
-
   public:
-  Motor_Sneak(int, int, int,  // Motor driver pins
+  Motor_Snake(int, int, int,  // Motor driver pins
               const float, const float, const float, //Motor parameters
               const int, const int, // Encoder pins
               double*, double*, double*, double, double, double, float, float // PID parameters
               );
 
-  Motor_Sneak(int, int, int,  // Motor driver pins
+  Motor_Snake(int, int, int,  // Motor driver pins
               const float, const float, const float, //Motor parameters
               const int, const int, // Encoder pins
               double*, double*, double*, double, double, double, float, float, // PID parameters
@@ -23,7 +22,7 @@ class Motor_Sneak
   void setup_motor_driver();
   void setup_encoder();
   void setup_pid();
-  void setup_motor();
+  void setup_full_snake_motor();
   void setup_interruption();
   
 
@@ -31,7 +30,7 @@ class Motor_Sneak
   private:
 
   static void isrWrapper(); // Static member function as a wrapper
-  static Motor_Sneak* instance; // Static member to hold the current instance pointer
+  static Motor_Snake* instance; // Static member to hold the current instance pointer
   void handleEncoder();
 
 

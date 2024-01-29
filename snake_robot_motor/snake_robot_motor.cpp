@@ -4,14 +4,14 @@
   #include "WProgram.h"
 #endif
 
-#include <sneak_robot_motor.h>
+#include <snake_robot_motor.h>
 #include <PID_v1.h>
 
 /*Constructor (...)*********************************************************
  *    The parameters specified here are those for for which we can't set up
  *    reliable defaults, so we need to have the user set them.
  ***************************************************************************/
-Motor_Sneak::Motor_Sneak(int pinPWM, int pinINA, int pinINB,  
+Motor_Snake::Motor_Snake(int pinPWM, int pinINA, int pinINB,  
                           const float PPR_motor, const float gearRatio_motor, const float decodeNumber_motor, 
                           const int encoder_PinA, const int encoder_PinB, 
                           double* InputPID, double* OutputPID, double* SetpointPID, 
@@ -27,7 +27,7 @@ Motor_Sneak::Motor_Sneak(int pinPWM, int pinINA, int pinINB,
     // Constructor body if needed
 }
 
-Motor_Sneak::Motor_Sneak(int pinPWM, int pinINA, int pinINB,  
+Motor_Snake::Motor_Snake(int pinPWM, int pinINA, int pinINB,  
                           const float PPR_motor, const float gearRatio_motor, const float decodeNumber_motor, 
                           const int encoder_PinA, const int encoder_PinB, 
                           double* InputPID, double* OutputPID, double* SetpointPID, 
@@ -44,27 +44,27 @@ Motor_Sneak::Motor_Sneak(int pinPWM, int pinINA, int pinINB,
     // Constructor body if needed
 }
 
-void Motor_Sneak::setup_motor_driver(){
+void Motor_Snake::setup_motor_driver(){
   pinMode(PWM, OUTPUT);
   pinMode(INA, OUTPUT);
   pinMode(INB, OUTPUT);
 }
 
-void Motor_Sneak::setup_encoder(){
+void Motor_Snake::setup_encoder(){
   pinMode(encoderPinA, INPUT_PULLUP);
   pinMode(encoderPinB, INPUT_PULLUP);
 }
 
-Motor_Sneak* Motor_Sneak::instance = nullptr;
+Motor_Snake* Motor_Snake::instance = nullptr;
 
-void Motor_Sneak::isrWrapper() {
+void Motor_Snake::isrWrapper() {
     // Call the handleEncoder() member function of the current instance
     if (instance) {
         instance->handleEncoder();
     }
 }
 
-void Motor_Sneak::setup_interruption() {
+void Motor_Snake::setup_interruption() {
     // Set the static member instance to the current instance
     instance = this;
 
@@ -72,17 +72,21 @@ void Motor_Sneak::setup_interruption() {
     attachInterrupt(digitalPinToInterrupt(encoderPinA), isrWrapper, CHANGE);
 }
 
-void Motor_Sneak::setup_pid(){
+void Motor_Snake::setup_pid(){
   pid.SetMode(AUTOMATIC);
   pid.SetOutputLimits(-limit_output_pid, limit_output_pid);  // Adjust output limits based on your motor driver
   pid.SetSampleTime(sample_time_pid);  // Set PID sample time in milliseconds
 }
 
-void Motor_Sneak::setup_motor(){
-  
+void Motor_Snake::setup_full_Snake_motor(){
+  Motor_Snake::setup_encoder();
+  Motor_Snake::setup_motor_driver();
+  Motor_Snake::setup_pid();
+  if (interrupt == true) Motor_Snake::setup_interruption();
+
 }
 
-void Motor_Sneak::handleEncoder() {
+void Motor_Snake::handleEncoder() {
   // Read the current state of the two channels
   int stateA = digitalRead(encoderPinA);
   int stateB = digitalRead(encoderPinB);
